@@ -1,113 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>make your game</title>
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bomberman-DOM (multiplayer)</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <header class="game-header">
-    <h1>Bomberman</h1>
-  </header>
-  <div id="sprite-container">
-      <div id="player-sprite"></div>
-    </div>
-  <div class="game-screen">
-    
-    <div class="scoreboard">
-      <header class="game-header" id="scoreboard-header">
-        <h2 class="h2">Scoreboard</h2>
-      </header>
-      <div class="scoreboard-item">
-        <span class="label">Level:</span>
-        <span id="level" class="value">1</span>
-      </div>
-      <div class="scoreboard-item">
-        <span class="label">Score:</span>
-        <span id="score" class="value">0</span>
-      </div>
-      <div class="scoreboard-item">
-        <span class="label">Lives:</span>
-        <span id="lives" class="value">3</span>
-      </div>
-      <div class="scoreboard-item">
-        <span class="label">Time:</span>
-        <span id="timer" class="value"></span>
-      </div>
-    </div>
 
-    <!-- gamee area for displaying the game -->
-    <div class="game-container">
-      <div class="game-area" id="game-area"></div>
-
-      <div class="controls">
-        <button id="pause-btn" class="control-btn">Pause</button>
-        <button id="restart-btn" class="control-btn">Restart</button>
-      </div>
-    </div>
-    
-    <div class="game-info">
-      <header class="game-header" id="game-info-header">
-        <h2 class="h2">Instructions</h2>
-      </header>
-      <div><span>'arrow keys':</span> <span>move the player.</span></div>
-      <div><span>'Space':</span> <span>place a bomb.</span></div>
-      <div><span>'P':</span> <span>pause the game.</span></div>
-      <div><span>'R':</span> <span>restart the game.</span></div>
-    </div>
+  <div class="wrap">
+    <!-- Left: lobby/game -->
+    <div class="panel" id="left"></div>
+    <!-- Right: chat + perf -->
+    <div class="panel" id="right"></div>
   </div>
 
-  <!-- Start Menu (shown by default) -->
-  <div class="menu-overlay" id="start-menu">
-    <div class="menu-box">
-      <h2>Welcome to the Game!</h2>
-      <button id="start-button">Start Game</button>
-    </div>
-  </div>
-
-  <!-- Pause Menu (hidden by default) -->
-  <div class="menu-overlay hidden" id="pause-menu">
-    <div class="menu-box">
-      <h2>Game Paused</h2>
-      <button id="continue-button">Continue</button>
-      <button id="restart-button">Restart</button>
-    </div>
-  </div>
-
-  <!-- Game Over (hidden by default) -->
-  <div class="menu-overlay hidden" id="game-over-menu">
-    <div class="menu-box">
-      <h2>Game Over</h2>
-      <div class="final-info">
-        <span>Final Score: <span id="final-score">0</span></span>
-        <span>Level Reached: <span id="final-level">1</span></span>
-        <span>Time Played: <span id="final-time">00:00</span></span>
-      </div>
-      <button id="restart-game-over">Restart</button>
-    </div>
-  </div>
-
-  <div class="menu-overlay hidden" id="win-menu">
-    <div class="menu-box">
-      <h2>You Win!</h2>
-      <div class="final-info">
-        <span>Score: <span id="final-score"></span></span>
-        <span>Next Level: <span id="final-level"></span></span>
-        <span>Time Played: <span id="final-time"></span></span>
-      </div>
-      <button id="restart-win">Restart</button>
-      <button id="next-level-btn">Next Level</button>
-    </div>
-  </div>
-
-
-  <script src="js/player-sprite.js"></script>
-
-  <script type="module" src="js/main.js"></script>
+  <script src="app.js"></script>
+  
 </body>
 
 </html>
