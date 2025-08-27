@@ -1,0 +1,48 @@
+
+.toba {
+    background-image: url('Assets/map/barrier.png'), url('Assets/map/grass.png');
+  }
+  
+  .grass {
+    background-image: url('Assets/map/grass.png');
+  }
+  
+  .top {
+    background-image: url('Assets/map/top.png');
+  }
+  
+  .right {
+    background-image: url('Assets/map/right.png');
+  }
+  
+  .down {
+    background-image: url('Assets/map/down.png');
+  }
+  
+  .left {
+    background-image: url('Assets/map/left.png');
+  }
+  
+  .topLeft {
+    background-image: url('Assets/map/topLeftGrass.png');
+  }
+  
+  .topRight {
+    background-image: url('Assets/map/topRightGrass.png');
+  }
+  
+  .downLeft {
+    background-image: url('Assets/map/downLeftGrass.png');
+  }
+  
+  .downRight {
+    background-image: url('Assets/map/downRightGrass.png');
+  }
+  
+  .tree {
+    background-image: url('Assets/map/tree.png'), url('Assets/map/grass.png');
+  }
+  
+  .box {
+    background-image: url('Assets/Sprout Lands - Sprites - Basic pack/Objects/Free_Chicken_House.png'), url('Assets/map/grass.png');
+  }
