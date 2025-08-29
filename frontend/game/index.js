@@ -76,94 +76,46 @@ export function connectToGameServer(name) {
   };
 }
 let tileMap;
-function handleServerMessages(data) {
-  const tileSize = 40;
-  if (data.type == "startGame") {
-    tileMap = new TileMap(tileSize, data);
-  }
-  
-  switch (data.type) {
-    case "updatePlayers":
+function handleServerMessages(event) {
+  const msg = JSON.parse(event.data);
+
+  switch (msg.type) {
+    case "waiting":
       updateGameState({
-        playerCount: data.playerCount,
-        playerId: data.playerId,
-        countP: data.countP,
-        progressText: `Players: ${data.playerCount}/4`
+        waitingContent: WaitingScreen(msg.data, msg.data.players),
+        progressText: "Waiting for players..."
       });
       break;
-    case "getname":
-      updateGameState({
-        username: data.nickname
-      });
-      break;
+
     case "startGame":
-      // Navigate to game route before starting countdown
+      // نبدل الصفحة للألعاب
       router.navigate("/game");
-      updateGameState({
-        waitingContent: null,
-        progressText: 'Starting game...',
-        gameStarted: true
-      });
-      startGameCountdown();
+
+      // ننتظر باش GamePage يتحمل
+      setTimeout(() => {
+        updateGameState({
+          waitingContent: null,
+          progressText: "Starting game...",
+          gameStarted: true
+        });
+
+        // نطلق اللعبة
+        startGame(msg.data, tileMap);
+      }, 100);
       break;
-    case "chatMsg":
-      addMessage(data);
+
+    case "chatMessage":
+      addChatMessage(msg.data);
       break;
-    case "playerMove":
-      updateOtherPlayerPosition(data);
+
+    case "notification":
+      showNotification(msg.data);
       break;
-    case "drawBomb":
-      drawBomb(data.position.row, data.position.col);
-      break;
-    case "removeBomb":
-      removeBomb(data.position.row, data.position.col);
-      break;
-    case "destroyWall":
-      destroyWall(
-        data.position.row,
-        data.position.col,
-        data.gift,
-        data.index,
-        data.frames
-      );
-      break;
-    case "drawExplosion":
-      drawExplosion(data.position.row, data.position.col, data.frames);
-      break;
-    case "HitByExplosion":
-      socket.send(JSON.stringify(data));
-      break;
-    case "playerDead":
-      animationPlayerDead(data);
-      break;
-    case "hearts":
-      hearts(data);
-      break;
-    case "rewardCollected":
-      rewardCollected(data);
-      break;
-    case "playerStatsUpdate":
-      updatePlayerStats(data);
-      notificationPower(data);
-      break;
-    case "brodcastplayerinfo":
-      broadcastPlayerInfo(data);
-      break;
-    case "theWinnerIs":
-      theWinnerIs(data);
-      socket.close();
-      OfflinePlayer = null;
-      break;
-    case "removePlayer":
-      console.log("Player removed:", data.id);
-      removePlayer(data.id);
-      broadcastPlayerInfo(data);
-      break;
+
     default:
-      break;
+      console.warn("Unknown message type:", msg.type);
   }
 }
-
 export let OfflinePlayer = [];
 
 function removePlayer(id) {
@@ -381,49 +333,36 @@ function startGame(data, tileMap) {
 let currentTileMap = null;
 
 function GoToGame(data, tileMap) {
-  if (currentTileMap) {
+   if (currentTileMap) {
     currentTileMap.cleanup();
   }
 
-  // Force a re-render of the game page first
-  const appContainer = document.getElementById('app');
-  if (!appContainer) {
-    console.error('App container not found');
+  const game = Ref.gameCanvasRef.current;
+  if (!game) {
+    console.error("Game canvas not found");
     return;
   }
 
-  // Clear the container and render the game page
-  appContainer.innerHTML = '';
-  const gamePage = GamePage();
-  renderApp(() => gamePage, appContainer);
+  // حفظ الماب الحالي
+  currentTileMap = tileMap;
 
-  // Initialize game after DOM update
-  setTimeout(() => {
-    let game = Ref.gameCanvasRef.current;
-    if (!game) {
-      console.error('Game canvas not found');
-      return;
+  // أول رسم للماب
+  tileMap.drawGame(game, data);
+
+  // حلقة التحديث
+  function gameLoop() {
+    if (game && currentTileMap) {
+      currentTileMap.drawGame(game, data);
+      requestAnimationFrame(gameLoop);
     }
+  }
+  requestAnimationFrame(gameLoop);
 
-    // Initialize game
-    currentTileMap = tileMap;
-    tileMap.drawGame(game, data);
+  // إعداد الشات
+  initializeChat(data.nickname);
 
-    // Start game loop
-    function gameLoop() {
-      if (game && currentTileMap) {
-        currentTileMap.drawGame(game, data);
-        requestAnimationFrame(gameLoop);
-      }
-    }
-    requestAnimationFrame(gameLoop);
-
-    // Initialize chat system
-    initializeChat(data.nickname);
-
-    // Update player info
-    broadcastPlayerInfo(data);
-  }, 100);
+  // إرسال معلومات اللاعب للآخرين
+  broadcastPlayerInfo(data);
 }
 
 
