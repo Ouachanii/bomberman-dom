@@ -1,0 +1,392 @@
+/* Basic Reset */
+body, h1, h2, p, ul, li, button, input {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Verdana', sans-serif;
+}
+
+body {
+    background-color: #1a1a1a;
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#root {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.app-container {
+    user-select: none; /* Prevent text selection on the whole app */
+}
+
+.app-container:focus {
+    outline: none;
+}
+
+/* Apply focus style to the board, not the whole container */
+.app-container:focus-visible .board {
+    box-shadow: 0 0 25px #00ffff;
+}
+
+/* General App Container */
+.container {
+    background-color: #2a2a2a;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    border: 1px solid #444;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Nickname Screen */
+.nickname-screen h1 {
+    margin-bottom: 25px;
+    color: #eee;
+    font-size: 2.5em;
+}
+
+.nickname-screen input {
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #1a1a1a;
+    color: #eee;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.nickname-screen input:focus {
+    outline: none;
+    border-color: #FFC0CB; /* Soft Pink */
+    box-shadow: 0 0 5px #FFC0CB;
+}
+
+.nickname-screen button {
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: none;
+    background-color: #B76E79; /* Rose Gold */
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.nickname-screen button:hover {
+    background-color: #a35d6a;
+    transform: scale(1.05);
+}
+
+/* Lobby Screen */
+.lobby-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.lobby-screen h1 {
+    margin-bottom: 10px;
+    color: #eee;
+}
+
+.lobby-screen p {
+    font-size: 16px;
+    margin: 0;
+    color: #aaa;
+}
+
+.player-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.player-list li {
+    padding: 12px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #B76E79; /* Rose Gold */
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.player-list li:hover {
+    transform: scale(1.05);
+    background-color: #3a3a3a;
+}
+
+.player-list li:last-child {
+    margin-bottom: 0;
+}
+
+
+.lobby-screen .timer {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFC0CB; /* Soft Pink */
+}
+
+/* Game Container */
+.game-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Game Board */
+.board {
+    display: grid;
+    position: relative;
+    background-color: transparent;
+    /* Neon grid for the play area */
+    background-image: radial-gradient(circle, rgba(0, 255, 255, 0.15) 1px, transparent 1px);
+    background-size: 50px 50px;
+    /* Bold, glowing border */
+    border: 5px solid rgba(0, 255, 255, 0.7);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    border-radius: 5px;
+}
+
+.cell {
+    /* width and height are controlled by the grid container */
+    background-size: cover;
+}
+
+.wall {
+    background-color: transparent;
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.3), 0 0 5px rgba(0, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.block {
+    background-color: rgba(255, 0, 255, 0.1); /* Magenta transparent */
+    border: 1px solid rgba(255, 0, 255, 0.6);
+    box-shadow: inset 0 0 15px rgba(255, 0, 255, 0.4);
+    border-radius: 4px;
+    position: relative;
+}
+
+/* Player */
+.player {
+    position: absolute;
+    top: 5px; /* Offset to center in cell */
+    left: 5px; /* Offset to center in cell */
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    z-index: 5;
+    /* The transform for smooth movement is applied inline */
+}
+
+/* Base filter makes the black ghost icon white. Then add player-specific glow. */
+.player-1 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #00ff00); }
+.player-2 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #ff00ff); }
+.player-3 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #ffff00); }
+.player-4 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #00FFFF); } /* Cyan */
+
+/* Bomb */
+.bomb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px; /* Match cell size */
+    height: 50px; /* Match cell size */
+    z-index: 10;
+    /* Neon glow effect */
+    filter: drop-shadow(0 0 5px #0ff) drop-shadow(0 0 10px #0ff);
+    /* Animation for pulsing */
+    animation: bomb-pulse-neon 1.5s infinite ease-in-out;
+}
+
+/* Explosion */
+.explosion {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    z-index: 20;
+    /* Use a pseudo-element for the effect */
+}
+
+.explosion::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, white, yellow, orange, red, transparent 70%);
+    border-radius: 50%;
+    animation: fire-explosion 0.6s ease-out forwards;
+}
+
+
+/* Chat */
+.chat-container {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(10, 10, 10, 0.7); /* Dark, transparent */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 0, 255, 0.4); /* Use magenta to differentiate from board */
+    min-width: 200px; /* Match player status */
+}
+
+.messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 0, 255, 0.2);
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(0,0,0,0.4);
+    min-height: 250px; /* Adjusted height */
+    border-radius: 4px;
+    color: #eee;
+}
+
+.message {
+    margin-bottom: 5px;
+}
+
+.chat-container input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 0, 255, 0.4);
+    background-color: rgba(0,0,0,0.5);
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.chat-container input:focus {
+    border-color: rgba(255, 0, 255, 0.8);
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
+}
+
+/* --- Animations --- */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fire-explosion {
+    0% {
+        transform: scale(0.2);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes bomb-pulse-neon {
+    0% {
+        filter: drop-shadow(0 0 5px #0ff) drop-shadow(0 0 10px #0ff);
+    }
+    50% {
+        filter: drop-shadow(0 0 10px #0ff) drop-shadow(0 0 20px #0ff);
+    }
+    100% {
+        filter: drop-shadow(0 0 5px #0ff) drop-shadow(0 0 10px #0ff);
+    }
+}
+
+/* --- Player Status UI (Subtle) --- */
+
+.player-status-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(10, 10, 10, 0.7); /* Dark, transparent */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 255, 0.4); /* Thin cyan border */
+    min-width: 200px;
+}
+
+.player-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: transparent; /* Simpler background */
+    transition: all 0.3s ease;
+}
+
+.player-status.dead {
+    opacity: 0.4;
+    filter: grayscale(1);
+}
+
+.player-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid; /* Keep border for color */
+}
+
+.player-1 .player-icon { border-color: #00ff00; }
+.player-2 .player-icon { border-color: #ff00ff; }
+.player-3 .player-icon { border-color: #ffff00; }
+.player-4 .player-icon { border-color: #00FFFF; } /* Cyan */
+
+.nickname {
+    font-weight: bold;
+    color: #fff;
+    flex-grow: 1;
+    text-shadow: none; /* Removed shadow for simplicity */
+}
+
+.lives-container {
+    display: flex;
+    gap: 4px;
+}
+
+.life-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px; /* Square hearts */
+    background-color: #ff4d4d; /* Red for lives */
+    box-shadow: none; /* Removed shadow */
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
