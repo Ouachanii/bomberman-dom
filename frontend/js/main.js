@@ -346,5 +346,5 @@ function init() {
   }, 100);
 }
 
-// Start the application
+// 🚀 Start the application
 init();
